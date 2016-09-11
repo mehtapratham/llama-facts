@@ -3,11 +3,14 @@ $(function() {
 	$('.scroll-up-arrow').on('click.scroll-up-btn', onUpArrowClick);
 	setTimeout(function(){
 		updateNavigation();
+		updateFirstPageContent();
 	},100);
 });
 
 var currentVisiblePage=0,
-arrPages=['.info-item.info-item-about-me','.info-item.info-item-about-me','.info-item.info-item-where-to-find-me'];
+arrPages=['.info-item.info-item-about-me','.info-item.info-item-about-me','.info-item.info-item-where-to-find-me'],
+firstPageCurrentContent = 0,
+isSocialAnimated = false;
 
 
 
@@ -21,10 +24,7 @@ function onDownArrowClick(event){
 			$('.scroll-up-arrow').show();
 		}
 		$(arrPages[currentVisiblePage]).addClass('translate-item');
-		if(currentVisiblePage >= arrPages.length-1){
-			$('.scroll-down-arrow').hide();
-			currentVisiblePage = arrPages.length-1;
-		}
+		
 	}
 	updateNavigation();
 }
@@ -41,10 +41,6 @@ function onUpArrowClick(event){
 		
 	}
 	currentVisiblePage--;
-	if(currentVisiblePage <= 0){
-		$('.scroll-up-arrow').hide();
-		currentVisiblePage = 0;
-	}
 	updateNavigation();
 }
 
@@ -52,4 +48,48 @@ function updateNavigation(){
 	$('.nav-item-active').removeClass('nav-item-active');
 
 	$('.nav-item:nth-child('+(currentVisiblePage+1)+')').addClass('nav-item-active');
+
+	if(currentVisiblePage <= 0){
+		$('.scroll-up-arrow').hide();
+		currentVisiblePage = 0;
+	}
+	if(currentVisiblePage >= arrPages.length-1){
+		$('.scroll-down-arrow').hide();
+		currentVisiblePage = arrPages.length-1;
+		if(!isSocialAnimated){
+			isSocialAnimated = true;
+			var socials = $('.social-item'), i=0;
+
+			setInterval(function(){
+				$('.social-item:nth-child(' +(i+1)+')' ).addClass(' bounce animated');
+				i++;
+				if(i>=$('.social-item').length){
+					clearInterval();
+				}
+			},150);
+			
+		}
+	}
+}
+
+
+function updateFirstPageContent(){
+
+	$('.info-item-content').hide();
+	$('.info-item-content-' + firstPageCurrentContent).show();
+	$('.dot-active').removeClass('dot-active');
+	$('.dot-' + firstPageCurrentContent).addClass('dot-active');
+	firstPageCurrentContent++;
+
+	setInterval(function(){
+		$('.info-item-content').hide();
+		$('.info-item-content-' + firstPageCurrentContent).show();
+		$('.dot-active').removeClass('dot-active');
+		$('.dot-' + firstPageCurrentContent).addClass('dot-active');
+		firstPageCurrentContent++;
+		if(firstPageCurrentContent >= 3){
+			firstPageCurrentContent=0;
+		}
+	},4000);
+
 }
