@@ -5,6 +5,7 @@ $(function() {
 		updateNavigation();
 		updateFirstPageContent();
 	},100);
+	$('.nav-item').on('click.nav-item-click', updateNavigationOnNavItemClick);
 });
 
 var currentVisiblePage=0,
@@ -12,6 +13,19 @@ arrPages=['.info-item.info-item-about-me','.info-item.info-item-about-me','.info
 firstPageCurrentContent = 0,
 isSocialAnimated = false;
 
+function updateNavigationOnNavItemClick(event){
+	var indexNavItem = $('.nav-item').index(event.target);
+	
+	if(indexNavItem > currentVisiblePage){
+		while(currentVisiblePage!=indexNavItem){
+			onDownArrowClick(event);
+		}
+	} else if(indexNavItem < currentVisiblePage){
+		while(currentVisiblePage != indexNavItem){
+			onUpArrowClick(event);
+		}
+	}
+}
 
 
 function onDownArrowClick(event){
